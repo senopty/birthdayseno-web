@@ -978,8 +978,8 @@ piece.dataset.index = idx;     // posisi saat ini di grid
       let row = Math.floor(val / 3);
 let col = val % 3;
 
-let posX = col * 100;
-let posY = row * 100;
+let posX = col * -100;
+let posY = row * -100;
 
 piece.style.backgroundPosition = posX + "px " + posY + "px";
 piece.style.backgroundSize = "300px 300px";
