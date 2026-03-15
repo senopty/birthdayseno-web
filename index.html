@@ -984,23 +984,23 @@ function startPuzzle() {
 
     arr.forEach((val, idx) => {
         let piece = document.createElement("div");
-        piece.className = "piece";
-        piece.dataset.correct = val;   // posisi benar
-        piece.dataset.index = idx;     // posisi saat ini di grid
+piece.className = "piece";
+piece.style.backgroundImage = "url('foto1.jpg')";
+piece.dataset.correct = val;   // posisi benar
+piece.dataset.index = idx;     // posisi saat ini di grid
 
-        let row = Math.floor(val / 3);
-        let col = val % 3;
+      let row = Math.floor(val / 3);
+let col = val % 3;
 
-        piece.style.backgroundSize = '300% 300%';
-        piece.style.backgroundPosition = `-${col*100}% -${row*100}%`;
-        piece.onclick = () => swapPiece(piece);
+let posX = col * 50;
+let posY = row * 50;
+
+piece.style.backgroundPosition = posX + "% " + posY + "%";
+piece.style.backgroundSize = "300% 300%";
+piece.onclick = () => swapPiece(piece);
 
         puzzle.appendChild(piece);
     });
-    
-    document.querySelectorAll(".piece").forEach((p)=>{
-  p.style.backgroundImage = "url('foto1.jpg')";
-});
 }
 
 function swapPiece(piece){
