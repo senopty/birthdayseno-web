@@ -1317,10 +1317,7 @@ showQuestion()
 function confetti(){
 
 if(confettiRunning) return
-confettiRunning=true
-
-let duration = 3000
-let start = Date.now()
+confettiRunning = true
 
 function update(){
 
@@ -1328,23 +1325,20 @@ ctx.clearRect(0,0,canvas.width,canvas.height)
 
 pieces.forEach(p=>{
 
-ctx.fillStyle=p.color
+ctx.fillStyle = p.color
 ctx.fillRect(p.x,p.y,p.size,p.size)
 
-p.y+=p.speed
+p.y += p.speed
 
-if(p.y>canvas.height){
-p.y=0
+// kalau keluar layar, muncul lagi dari atas random
+if(p.y > canvas.height){
+p.y = -10
+p.x = Math.random() * canvas.width
 }
 
 })
 
-if(Date.now() - start < duration){
 requestAnimationFrame(update)
-}else{
-ctx.clearRect(0,0,canvas.width,canvas.height)
-confettiRunning=false
-}
 
 }
 
