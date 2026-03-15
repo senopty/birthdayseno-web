@@ -997,6 +997,10 @@ function startPuzzle() {
 
         puzzle.appendChild(piece);
     });
+    
+    document.querySelectorAll(".piece").forEach((p)=>{
+  p.style.backgroundImage = "url('foto1.jpg')";
+});
 }
 
 function swapPiece(piece){
