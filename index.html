@@ -990,15 +990,6 @@ piece.onclick = () => swapPiece(piece);
         puzzle.appendChild(piece);
     });
 }
-
-function swapPiece(piece){
-    if(swapLock) return;
-    if(!firstPiece){
-        firstPiece = piece;
-        piece.style.border = "3px solid yellow";
-    } else {
-        swapLock = true;
-
         // swap posisi
 function swapPiece(piece){
 
