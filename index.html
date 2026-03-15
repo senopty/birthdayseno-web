@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Birthday Surprise</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+box-sizing:border-box;
+transition:all .35s cubic-bezier(.25,.8,.25,1);
+}
+
+body{
+margin:0;
+font-family:'Poppins',sans-serif;
+background:linear-gradient(135deg,#ff6ec7,#6ecbff,#8affc1);
+background-size:400% 400%;
+animation:partyBG 12s ease infinite;
+color:white;
+text-align:center;
+overflow-x:hidden;
+}
+
+@keyframes partyBG{
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
+}
+
+section{
+min-height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+padding:20px;
+}
+
+.hidden{display:none}
+
+button{
+padding:14px 20px;
+border:none;
+border-radius:14px;
+background:linear-gradient(135deg,#00ffb7,#00c3ff);
+color:black;
+font-weight:600;
+font-size:16px;
+margin-top:15px;
+cursor:pointer;
+box-shadow:0 10px 25px rgba(0,0,0,0.3);
+}
+
+button:hover{
+transform:translateY(-3px) scale(1.03);
+box-shadow:0 15px 35px rgba(0,0,0,0.4);
+}
+
+canvas{
+position:fixed;
+top:0;
+left:0;
+pointer-events:none;
+}
+
+#hacker{
+background:black;
+color:#00ff9c;
+width:100%;
+height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+font-family:monospace;
+}
+
+#hack{
+font-family:monospace;
+font-size:14px;
+text-align:left;
+max-width:320px;
+white-space:pre-wrap;
+color:#00ff9c;
+}
+
+/* CAKE */
+
+#cake{
+width:180px;
+height:180px;
+position:relative;
+animation:spin 8s linear infinite;
+}
+
+@keyframes spin{
+from{transform:rotateY(0)}
+to{transform:rotateY(360deg)}
+}
+
+.layer{
+width:180px;
+height:50px;
+background:linear-gradient(#7ecbff,#3aa0ff);
+border-radius:20px;
+position:absolute;
+bottom:0;
+box-shadow:0 8px 20px rgba(0,0,0,0.4);
+}
+
+.layer2{
+bottom:45px;
+background:linear-gradient(#5bb8ff,#1d7eff);
+}
+
+.layer3{
+bottom:90px;
+background:linear-gradient(#9ddcff,#5bb8ff);
+}
+
+.candle{
+width:10px;
+height:40px;
+background:white;
+position:absolute;
+bottom:140px;
+left:50%;
+transform:translateX(-50%);
+z-index:5;
+}
+
+.smoke{
+position:absolute;
+width:12px;
+height:12px;
+background:rgba(200,200,200,0.6);
+border-radius:50%;
+top:-30px;
+left:-1px;
+opacity:0;
+animation:smokeUp 2s ease-out forwards;
+}
+
+@keyframes smokeUp{
+0%{
+transform:translateY(0) scale(0.5);
+opacity:0.8;
+}
+100%{
+transform:translateY(-60px) scale(2);
+opacity:0;
+}
+}
+
+.flame{
+width:18px;
+height:24px;
+background:radial-gradient(circle,yellow 10%,orange 60%);
+border-radius:50%;
+position:absolute;
+top:-22px;
+left:-4px;
+animation:flicker .15s infinite alternate;
+box-shadow:0 0 15px orange,0 0 30px yellow;
+}
+
+@keyframes flicker{
+from{transform:scale(1)}
+to{transform:scale(1.3)}
+}
+
+/* PUZZLE */
+
+#puzzle{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:4px;
+width:270px;
+max-width:90vw;
+}
+
+.piece{
+width:100%;
+aspect-ratio:1;
+background-image:url("foto1.jpg");
+background-size:270px 270px;
+border:2px solid white;
+}
+
+.piece{
+cursor:pointer;
+transition:transform .2s;
+}
+
+.piece:hover{
+transform:scale(1.05);
+}
+
+/* QUIZ */
+
+#quizBox{
+max-width:350px;
+}
+
+#progressBar{
+height:8px;
+background:#222;
+border-radius:20px;
+margin-bottom:20px;
+overflow:hidden;
+}
+
+#progress{
+height:100%;
+width:0%;
+background:#00ffb7;
+transition:.4s;
+}
+
+#answers{
+display:flex;
+flex-direction:column;
+gap:10px;
+}
+
+.answerBtn{
+padding:14px;
+border-radius:10px;
+border:2px solid #00ffb7;
+background:#111;
+color:#00ffb7;
+font-size:16px;
+}
+
+.correct{background:#00ffb7;color:black}
+.wrong{background:#ff4d4d;color:white}
+
+/* SLIDESHOW */
+
+.film{
+width:260px;
+aspect-ratio:3/4;
+overflow:hidden;
+position:relative;
+border-radius:14px;
+background:black;
+box-shadow:0 10px 25px rgba(0,0,0,0.6);
+padding:12px;
+}
+.film::before,
+.film::after{
+content:"";
+position:absolute;
+left:0;
+width:100%;
+height:14px;
+background:
+repeating-linear-gradient(
+90deg,
+black 0px,
+black 14px,
+transparent 14px,
+transparent 28px
+);
+z-index:3;
+}
+
+.film::before{
+top:0;
+}
+
+.film::after{
+bottom:0;
+}
+
+.slide{
+position:absolute;
+width:100%;
+height:100%;
+opacity:0;
+animation:slideShow 20s infinite;
+transition:opacity 1s ease, transform 2s ease;
+}
+
+.slide img{
+width:100%;
+height:100%;
+object-fit:cover;
+border-radius:6px;
+}
+
+.slide:nth-child(1){animation-delay:0s}
+.slide:nth-child(2){animation-delay:4s}
+.slide:nth-child(3){animation-delay:8s}
+.slide:nth-child(4){animation-delay:12s}
+
+@keyframes slideShow{
+
+0%{
+opacity:0;
+transform:scale(1);
+}
+
+10%{
+opacity:1;
+transform:scale(1.08);
+}
+
+40%{
+opacity:1;
+transform:scale(1.15);
+}
+
+50%{
+opacity:0;
+transform:scale(1.2);
+}
+
+100%{
+opacity:0;
+}
+
+}
+
+.letter{
+width:100%;
+background:white;
+color:#333;
+border-radius:10px;
+padding:10px;
+}
+
+#message{
+font-family: "Georgia", serif;
+font-size:17px;
+line-height:1.9;
+color:#333;
+}
+
+/* DEKORASI BALON */
+.balloon{
+position:fixed;
+bottom:-120px;
+width:45px;
+height:60px;
+border-radius:50%;
+animation:float 12s linear infinite;
+opacity:0.95;
+box-shadow:inset -6px -10px 15px rgba(0,0,0,0.2);
+}
+
+.balloon:after{
+content:"";
+position:absolute;
+width:2px;
+height:45px;
+background:white;
+left:50%;
+top:60px;
+}
+
+@keyframes float{
+0%{
+transform:translateY(0) rotate(0deg);
+}
+100%{
+transform:translateY(-120vh) rotate(10deg);
+}
+}
+
+.lights{
+position:fixed;
+top:0;
+width:100%;
+display:flex;
+justify-content:space-around;
+z-index:10;
+}
+
+.bulb{
+width:14px;
+height:20px;
+border-radius:50%;
+animation:blink 1.5s infinite alternate;
+}
+
+@keyframes blink{
+from{opacity:0.3}
+to{opacity:1}
+}
+
+.star{
+position:fixed;
+color:#ffd700;
+font-size:18px;
+animation:twinkle 2s infinite alternate;
+}
+
+@keyframes twinkle{
+from{opacity:0.3}
+to{opacity:1}
+}
+
+/* ENVELOPE SUPER REALISTIS */
+
+.envelope{
+width:320px;
+height:210px;
+background:linear-gradient(135deg,#ff8fab,#ff6b81);
+position:relative;
+border-radius:10px;
+cursor:pointer;
+
+box-shadow:
+0 20px 50px rgba(0,0,0,0.4),
+inset 0 3px 8px rgba(255,255,255,0.4);
+
+transform-style:preserve-3d;
+perspective:900px;
+
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+.envelope{
+animation:envelopeIdle 3s ease-in-out infinite;
+}
+
+@keyframes envelopeIdle{
+
+0%{transform:rotate(0deg)}
+50%{transform:rotate(1.5deg)}
+100%{transform:rotate(0deg)}
+
+}
+
+/* SEGITIGA PENUTUP */
+
+.flap{
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+
+background:linear-gradient(135deg,#ff6b81,#ff4d6d);
+
+clip-path:polygon(0 0,100% 0,50% 60%);
+
+transform-origin:top;
+transition:transform 0.9s cubic-bezier(.2,1.3,.3,1);
+
+z-index:4;
+
+box-shadow:0 8px 20px rgba(0,0,0,0.3);
+}
+
+/* SAAT TERBUKA */
+
+.envelope.open .flap{
+transform:rotateX(180deg);
+}
+
+/* KERTAS DI DALAM AMPlOP */
+
+.paper{
+position:absolute;
+bottom:-30px;
+left:50%;
+transform:translateX(-50%);
+
+width:260px;
+height:300px;
+
+background:
+linear-gradient(#f6f6f6 1px, transparent 1px),
+radial-gradient(circle at top,#ffffff,#fff6f6);
+
+background-size:100% 26px;
+
+border-radius:6px;
+padding:15px;
+
+line-height:1.8;
+font-size:14px;
+
+overflow:hidden;
+
+box-shadow:0 15px 35px rgba(0,0,0,0.3);
+
+opacity:0;
+
+transition:
+transform 1s cubic-bezier(.2,1,.3,1),
+opacity 0.6s;
+
+z-index:2;
+}
+
+@keyframes letterAppear{
+0%{
+transform:translate(-50%,-50%);
+opacity:0;
+}
+100%{
+transform:translate(-50%,-50%);
+opacity:1;
+}
+}
+
+/* KERTAS KELUAR */
+
+.envelope.open .paper:not(.show){
+opacity:0;
+}
+
+/* ZOOM KE TENGAH LAYAR */
+
+.paper.show{
+
+position:fixed;
+top:50%;
+left:50%;
+
+width:90%;
+max-width:600px;
+height:90vh;
+
+transform:translate(-50%,-50%);
+
+padding:40px;
+font-size:16px;
+line-height:1.6;
+
+overflow-y:auto;
+
+background:white;
+color:#333;
+
+border-radius:12px;
+
+box-shadow:0 25px 60px rgba(0,0,0,0.4);
+
+z-index:50;
+
+animation:letterAppear .7s ease forwards;
+
+}
+
+.finalTitle{
+font-size:48px;
+letter-spacing:3px;
+text-shadow:0 0 20px #ffd700,0 0 40px #ff6ec7;
+animation:glow 2s infinite alternate;
+}
+
+@keyframes glow{
+from{
+text-shadow:0 0 10px #ffd700;
+}
+to{
+text-shadow:0 0 30px #ff6ec7,0 0 50px #ffd700;
+}
+}
+
+.cinematicBG{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+
+opacity:0;
+pointer-events:none;
+
+transition:opacity .8s ease;
+
+z-index:40;
+}
+
+.cinematicBG.show{
+opacity:1;
+}
+
+.love{
+position:fixed;
+color:#ff4d6d;
+font-size:20px;
+
+animation:loveFly 3s ease forwards;
+}
+
+@keyframes loveFly{
+
+0%{
+transform:translateY(0) scale(0.6);
+opacity:1;
+}
+
+100%{
+transform:translateY(-200px) scale(1.6);
+opacity:0;
+}
+
+}
+
+.letterText p{
+margin-bottom:16px;
+}
+
+.closeBtn{
+margin-top:30px;
+display:block;
+margin-left:auto;
+margin-right:auto;
+
+background:#ff6b81;
+color:white;
+
+border:none;
+padding:10px 20px;
+border-radius:8px;
+
+font-size:16px;
+cursor:pointer;
+
+box-shadow:0 5px 15px rgba(0,0,0,0.2);
+}
+
+.closeBtn{
+display:block;
+margin:30px auto 0;
+background:#ff6b81;
+color:white;
+border:none;
+padding:10px 20px;
+border-radius:8px;
+font-size:16px;
+cursor:pointer;
+box-shadow:0 5px 15px rgba(0,0,0,0.2);
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="cinematicBG" id="cinematicBG"></div>
+
+<!-- LAMPU PESTA -->
+<div class="lights">
+<div class="bulb" style="background:#ffd700"></div>
+<div class="bulb" style="background:#6bcBff"></div>
+<div class="bulb" style="background:#ffd700"></div>
+<div class="bulb" style="background:#6bcBff"></div>
+<div class="bulb" style="background:#ffd700"></div>
+</div>
+
+<!-- BALON BIRTHDAY BOY -->
+<div class="balloon" style="left:10%;background:#4da6ff"></div>
+<div class="balloon" style="left:25%;background:#ffd700;animation-delay:2s"></div>
+<div class="balloon" style="left:40%;background:#4da6ff;animation-delay:4s"></div>
+<div class="balloon" style="left:60%;background:#ffd700;animation-delay:1s"></div>
+<div class="balloon" style="left:80%;background:#4da6ff;animation-delay:3s"></div>
+
+<!-- BINTANG -->
+<div class="star" style="top:20%;left:15%">⭐</div>
+<div class="star" style="top:35%;left:80%">⭐</div>
+<div class="star" style="top:60%;left:25%">⭐</div>
+<div class="star" style="top:70%;left:70%">⭐</div>
+
+<!-- BALON DEKORASI -->
+<div class="balloon" style="left:10%;background:#ff6b6b"></div>
+<div class="balloon" style="left:25%;background:#ffd93d;animation-delay:2s"></div>
+<div class="balloon" style="left:40%;background:#6bcBff;animation-delay:4s"></div>
+<div class="balloon" style="left:60%;background:#ff8fab;animation-delay:1s"></div>
+<div class="balloon" style="left:80%;background:#9bff6b;animation-delay:3s"></div>
+
+<audio id="music" loop>
+<source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<canvas id="confetti"></canvas>
+
+<section id="hacker">
+<h2>INITIALIZING SYSTEM...</h2>
+<pre id="hack"></pre>
+</section>
+
+<section id="cakeSection" class="hidden">
+<h1>🎉 SURPRISE 🎉</h1>
+
+<div id="cake">
+<div class="layer"></div>
+<div class="layer layer2"></div>
+<div class="layer layer3"></div>
+
+<div class="candle">
+<div class="flame" id="flame"></div>
+</div>
+</div>
+
+<p>Tiup lilin pakai mic 🎤</p>
+<button onclick="startMic()">Aktifkan Mic</button>
+</section>
+
+<section id="inviteGame" class="hidden">
+<h2>💌</h2>
+
+<p style="max-width:300px;font-size:18px;line-height:1.6">
+Yuk main mini game bersamaku! 🎮  
+lalu ambil amplop hadiah nya di akhir ya!
+</p>
+
+<button onclick="goStartGame()">Lanjut</button>
+</section>
+
+
+<section id="startGame" class="hidden">
+<h1>Game Time 🎮</h1>
+<button onclick="startPuzzle()">START GAME</button>
+</section>
+
+<section id="puzzleSection" class="hidden">
+<h2>Puzzle 🧩</h2>
+<div id="puzzle"></div>
+</section>
+
+<section id="nextGame" class="hidden">
+
+<h2>✨</h2>
+
+<p style="font-size:20px">
+Ayo lanjut ke mini game kedua!
+</p>
+
+<button onclick="startQuiz()">Lanjut</button>
+
+</section>
+
+<section id="quizSection" class="hidden">
+<h2>Quiz ❓</h2>
+
+<div id="quizBox">
+<div id="progressBar">
+<div id="progress"></div>
+</div>
+
+<p id="question"></p>
+<div id="answers"></div>
+</div>
+</section>
+
+<section id="rewardSection" class="hidden">
+<h2>Ambil Hadiah 🎁</h2>
+<button onclick="showFilm()">Ambil Hadiah</button>
+</section>
+
+<section id="filmSection" class="hidden">
+<div class="film">
+<div class="slide"><img src="foto2.jpg"></div>
+<div class="slide"><img src="foto3.jpg"></div>
+<div class="slide"><img src="foto4.jpg"></div>
+<div class="slide"><img src="foto5.jpg"></div>
+</div>
+
+<button onclick="openLetter()">Lanjut</button>
+</section>
+
+<section id="letterSection" class="hidden">
+
+<div class="envelope" onclick="openEnvelope()">
+
+<div class="flap"></div>
+
+<div class="paper">
+
+<div id="message" class="letterText">
+
+<h3 style="margin-top:0;color:#ff6b81">
+Untuk Mamaskuu 🎂
+</h3>
+
+<p>
+Hai Sayaanggg!! ^-^ 🎉 Happyyy Birthdaayyy
+</p>
+
+<p>
+Untuk kata kata pertama yang akan aku ucapkan di sini adalah maaf :(  
+Maaf kalau seandainya aku ada salah ke kamu selama ini.
+Entah itu di ucapan, tingkah laku, dan lain lain nya yang mungkin membuat kamu sakit hati.
+</p>
+
+<p>
+Lalu untuk kata kedua, aku mau mengucapkan ke kamu SELAMAT ULANG TAHUN🎉!!
+Aku benar benar selalu berharap bahwa kamu selalu bahagia.
+</p>
+
+<p>
+Aku berharap kamu bisa menggapai semua impian mu, Dan aku selalu berharap bahwa kamu bisa hidup dengan tenang tanpa ada masalah.
+</p>
+
+<p>
+Semoga bantalmu selalu nyaman ketika kamu tidur.
+Semoga makananmu selalu enak.
+Semoga perjalananmu selalu aman.
+Dan semoga apapun yang kamu semogakan bisa terkabulkan.
+</p>
+
+<p>
+Apapun yang terjadi, ingat aku selalu ada di sini di belakang kamu.
+Kamu boleh bercerita bebas tanpa perlu takut di judge.
+</p>
+
+<p>
+Sekali lagi selamat ulang tahun ya Mas Jawaku ❤️
+</p>
+
+<p style="margin-top:30px">
+— Dari Tatyaa 💌
+</p>
+
+<p style="
+text-align:center;
+font-size:13px;
+opacity:0.6;
+margin-top:20px;
+">
+⬇ Scroll untuk membaca
+</p>
+
+</div>
+
+<button onclick="closeLetter()" class="closeBtn">
+Tutup ✖
+</button>
+
+</div>
+
+</section>
+
+<section id="finalSection" class="hidden">
+
+<h1 class="finalTitle">
+🎉 HAPPY BIRTHDAY 🎉
+</h1>
+
+<p style="
+font-size:18px;
+max-width:320px;
+line-height:1.6;
+">
+Semoga semua impian kamu tercapai  
+dan hari ini menjadi awal dari kebahagiaan yang lebih besar ❤️
+</p>
+
+</section>
+
+<script>
+
+let hackText=`connecting server...
+decrypting data...
+bypassing firewall...
+access granted...
+loading birthday surprise...`
+
+let i=0
+
+function hacker(){
+
+if(i<hackText.length){
+
+document.getElementById("hack").innerHTML+=hackText[i]
+
+i++
+
+setTimeout(hacker,30)
+
+}else{
+
+setTimeout(()=>{
+
+document.getElementById("hacker").style.display="none"
+
+document.body.style.background="linear-gradient(135deg,#ff6ec7,#6ecbff,#8affc1)"
+
+document.getElementById("cakeSection").classList.remove("hidden")
+
+confetti()
+
+},800)
+
+}
+
+}
+
+hacker()
+
+function startMic(){
+
+navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
+
+let ctx=new AudioContext()
+
+let mic=ctx.createMediaStreamSource(stream)
+
+let analyser=ctx.createAnalyser()
+
+mic.connect(analyser)
+
+let data=new Uint8Array(analyser.frequencyBinCount)
+
+function detect(){
+
+analyser.getByteFrequencyData(data)
+
+let volume=data.reduce((a,b)=>a+b)/data.length
+
+if(volume>80){
+
+blow()
+
+}
+
+requestAnimationFrame(detect)
+
+}
+
+detect()
+
+})
+
+}
+
+function blow(){
+
+document.getElementById("flame").style.display="none"
+document.getElementById("music").play()
+
+let candle=document.querySelector(".candle")
+
+for(let i=0;i<6;i++){
+let smoke=document.createElement("div")
+smoke.className="smoke"
+smoke.style.left=(Math.random()*10-5)+"px"
+candle.appendChild(smoke)
+}
+
+setTimeout(()=>{
+
+document.getElementById("cakeSection").classList.add("hidden")
+document.getElementById("inviteGame").classList.remove("hidden")
+
+},1800)
+
+}
+
+let firstPiece=null
+
+function startPuzzle(){
+
+document.getElementById("startGame").classList.add("hidden")
+document.getElementById("puzzleSection").classList.remove("hidden")
+
+let puzzle=document.getElementById("puzzle")
+
+puzzle.innerHTML=""
+
+let arr=[0,1,2,3,4,5,6,7,8]
+
+do{
+arr.sort(()=>Math.random()-0.5)
+}while(arr.every((v,i)=>v===i))
+
+arr.forEach(i=>{
+
+let piece=document.createElement("div")
+
+piece.className="piece"
+
+piece.dataset.correct=i
+piece.dataset.index=i
+
+let x=(i%3)*90
+let y=Math.floor(i/3)*90
+
+piece.style.backgroundPosition=`-${x}px -${y}px`
+
+piece.onclick=()=>swapPiece(piece)
+
+puzzle.appendChild(piece)
+
+})
+
+}
+
+function swapPiece(piece){
+
+if(!firstPiece){
+
+firstPiece=piece
+piece.style.border="3px solid yellow"
+
+}else{
+
+let tempPos=piece.style.backgroundPosition
+let tempIndex=piece.dataset.index
+
+piece.style.backgroundPosition=firstPiece.style.backgroundPosition
+piece.dataset.index=firstPiece.dataset.index
+
+firstPiece.style.backgroundPosition=tempPos
+firstPiece.dataset.index=tempIndex
+
+firstPiece.style.border="2px solid white"
+firstPiece=null
+
+checkPuzzle()
+
+}
+
+}
+
+function checkPuzzle(){
+
+let pieces=document.querySelectorAll(".piece")
+
+let correct=true
+
+pieces.forEach((p,i)=>{
+
+if(Number(p.dataset.index)!==i){
+correct=false
+}
+
+})
+
+if(correct){
+
+confetti()
+
+let puzzle=document.getElementById("puzzle")
+
+puzzle.innerHTML=`
+<div style="
+width:270px;
+max-width:90vw;
+margin:auto;
+text-align:center;
+">
+<img src="foto1.jpg" style="
+width:100%;
+border-radius:12px;
+box-shadow:0 10px 25px rgba(0,0,0,0.6);
+object-fit:cover;
+aspect-ratio:1/1;
+">
+<h2 style="
+color:#00ffb7;
+margin-top:10px;
+">Puzzle Complete! 🎉</h2>
+</div>
+`
+
+setTimeout(()=>{
+
+document.getElementById("puzzleSection").classList.add("hidden")
+document.getElementById("nextGame").classList.remove("hidden")
+
+showQuestion()
+
+},1200)
+
+}
+
+}
+
+let questions=[
+
+{
+q:"Dimana pertama kali kita kenal?",
+options:["Istana Negara","Trainee GIGN","Rumah Pria Solo","Tiktok"],
+answer:1
+},
+
+{
+q:"Apa MBTI Pria yang sedang berulang tahun sekarang?",
+options:["INTJ","INTP","MINE","ENFP"],
+answer:0
+},
+
+{
+q:"Sudah berapa lama kita kenal?",
+options:["2 bulan","6 tahun","24 tahun","5 tahun"],
+answer:3
+},
+
+{
+q:"Apa hal yang paling tatyaa suka?",
+options:["nick wild","saya?","kim mingyu","bahlil"],
+answer:1
+},
+
+{
+q:"apa kamu sayang tatyaa?",
+options:["syg","samyang","sayang banget","seng"],
+answer:2
+}
+
+]
+
+let currentQuestion=0
+
+function showQuestion(){
+
+let q=questions[currentQuestion]
+
+document.getElementById("question").innerText=q.q
+
+let answers=""
+
+q.options.forEach((opt,i)=>{
+
+answers+=`<button class="answerBtn" onclick="selectAnswer(${i})">${opt}</button>`
+
+})
+
+document.getElementById("answers").innerHTML=answers
+
+updateProgress()
+
+}
+
+function selectAnswer(i){
+
+let buttons=document.querySelectorAll(".answerBtn")
+
+if(i===questions[currentQuestion].answer){
+
+buttons[i].classList.add("correct")
+
+setTimeout(()=>{
+
+currentQuestion++
+
+if(currentQuestion<questions.length){
+
+showQuestion()
+
+}else{
+
+document.getElementById("quizSection").classList.add("hidden")
+document.getElementById("rewardSection").classList.remove("hidden")
+
+}
+
+},800)
+
+}else{
+
+buttons[i].classList.add("wrong")
+
+}
+
+}
+
+function updateProgress(){
+
+let progress=(currentQuestion/questions.length)*100
+
+document.getElementById("progress").style.width=progress+"%"
+
+}
+
+function showFilm(){
+
+document.getElementById("rewardSection").classList.add("hidden")
+document.getElementById("filmSection").classList.remove("hidden")
+
+}
+
+function openLetter(){
+
+document.getElementById("filmSection").classList.add("hidden")
+document.getElementById("letterSection").classList.remove("hidden")
+
+}
+function openEnvelope(){
+
+let env=document.querySelector(".envelope")
+
+// pengecekan supaya tidak bisa dibuka dua kali
+if(env.classList.contains("open")) return
+
+let paper=document.querySelector(".paper")
+let bg=document.getElementById("cinematicBG")
+
+env.classList.add("open")
+
+bg.classList.add("show")
+
+setTimeout(()=>{
+
+paper.classList.add("show")
+confetti()
+createLove()
+
+},600)
+
+}
+
+let confettiRunning=false
+
+let canvas=document.getElementById("confetti")
+let ctx=canvas.getContext("2d")
+
+canvas.width=window.innerWidth
+canvas.height=window.innerHeight
+
+let pieces=[]
+
+for(let i=0;i<350;i++){
+
+pieces.push({
+x:Math.random()*canvas.width,
+y:Math.random()*canvas.height,
+size:5,
+speed:4+Math.random()*6
+})
+
+}
+
+function createLove(){
+
+for(let i=0;i<15;i++){
+
+let love=document.createElement("div")
+
+love.className="love"
+
+love.innerHTML="❤️"
+
+love.style.left=(50+Math.random()*20-10)+"%"
+
+love.style.top="55%"
+
+love.style.animationDelay=(Math.random()*0.5)+"s"
+
+document.body.appendChild(love)
+
+setTimeout(()=>{
+
+love.remove()
+
+},3000)
+
+}
+
+}
+
+function closeLetter(){
+
+let paper=document.querySelector(".paper")
+let bg=document.getElementById("cinematicBG")
+
+paper.classList.remove("show")
+bg.classList.remove("show")
+
+setTimeout(()=>{
+
+document.getElementById("letterSection").classList.add("hidden")
+document.getElementById("finalSection").classList.remove("hidden")
+
+},500)
+
+}
+
+function goStartGame(){
+
+document.getElementById("inviteGame").classList.add("hidden")
+document.getElementById("startGame").classList.remove("hidden")
+
+}
+
+function startQuiz(){
+
+document.getElementById("nextGame").classList.add("hidden")
+document.getElementById("quizSection").classList.remove("hidden")
+
+showQuestion()
+
+}
+
+function confetti(){
+
+if(confettiRunning) return
+confettiRunning=true
+
+function update(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height)
+
+pieces.forEach(p=>{
+
+ctx.fillStyle=["#ffd700","#6bcBff","#ff6b6b","#9bff6b","#ff8fab"][Math.floor(Math.random()*5)]
+ctx.fillRect(p.x,p.y,p.size,p.size)
+
+p.y+=p.speed
+
+if(p.y>canvas.height)p.y=0
+
+})
+
+requestAnimationFrame(update)
+
+}
+
+update()
+
+}
+
+window.addEventListener("resize",()=>{
+canvas.width=window.innerWidth
+canvas.height=window.innerHeight
+})
+
+</script>
+
+</body>
+</html>\
