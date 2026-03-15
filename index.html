@@ -1000,21 +1000,39 @@ function swapPiece(piece){
         swapLock = true;
 
         // swap posisi
-        let tempPos = piece.style.backgroundPosition;
-        let tempIndex = piece.dataset.index;
+function swapPiece(piece){
 
-        piece.style.backgroundPosition = firstPiece.style.backgroundPosition;
-        piece.dataset.index = firstPiece.dataset.index;
+if(swapLock) return;
 
-        firstPiece.style.backgroundPosition = tempPos;
-        firstPiece.dataset.index = tempIndex;
+if(!firstPiece){
 
-        firstPiece.style.border = "2px solid white";
-        firstPiece = null;
+    firstPiece = piece;
+    piece.style.border = "3px solid yellow";
 
-        checkPuzzle();
-        setTimeout(()=>swapLock=false, 100); // unlock
-    }
+}else{
+
+    swapLock = true;
+
+    let tempPos = piece.style.backgroundPosition;
+    let tempIndex = piece.dataset.index;
+    let tempCorrect = piece.dataset.correct;
+
+    piece.style.backgroundPosition = firstPiece.style.backgroundPosition;
+    piece.dataset.index = firstPiece.dataset.index;
+    piece.dataset.correct = firstPiece.dataset.correct;
+
+    firstPiece.style.backgroundPosition = tempPos;
+    firstPiece.dataset.index = tempIndex;
+    firstPiece.dataset.correct = tempCorrect;
+
+    firstPiece.style.border = "2px solid white";
+    firstPiece = null;
+
+    checkPuzzle();
+
+    setTimeout(()=>swapLock=false,100);
+}
+
 }
 
 function checkPuzzle(){
@@ -1022,36 +1040,36 @@ function checkPuzzle(){
 let puzzlePieces = document.querySelectorAll(".piece");
 let correct = true;
 
-puzzlePieces.forEach((p,i)=>{
-    if(Number(p.dataset.correct) !== i){
+puzzlePieces.forEach((p, i) => {
+    if(Number(p.dataset.index) !== i){
         correct = false;
     }
 });
 
-if(correct && !document.getElementById("nextGame").classList.contains("shown")){
+    if(correct && !document.getElementById("nextGame").classList.contains("shown")){
+        // tampilkan confetti sekali
+        confetti();
 
-    confetti();
+        let puzzle = document.getElementById("puzzle");
+        puzzle.innerHTML = `
+        <div style="width:270px; max-width:90vw; margin:auto; text-align:center;">
+            <img src="foto1.jpg" style="
+                width:100%;
+                border-radius:12px;
+                box-shadow:0 10px 25px rgba(0,0,0,0.6);
+                object-fit:cover;
+                aspect-ratio:1/1;
+            ">
+            <h2 style="color:#00ffb7; margin-top:10px;">Puzzle Complete! 🎉</h2>
+        </div>
+        `;
 
-    let puzzle = document.getElementById("puzzle");
-
-    puzzle.innerHTML = `
-    <div style="width:270px; max-width:90vw; margin:auto; text-align:center;">
-        <img src="foto1.jpg" style="
-            width:100%;
-            border-radius:12px;
-            box-shadow:0 10px 25px rgba(0,0,0,0.6);
-            object-fit:cover;
-            aspect-ratio:1/1;
-        ">
-        <h2 style="color:#00ffb7; margin-top:10px;">Puzzle Complete! 🎉</h2>
-    </div>
-    `;
-
-    setTimeout(()=>{
-        document.getElementById("puzzleSection").classList.add("hidden");
-        document.getElementById("nextGame").classList.remove("hidden");
-        document.getElementById("nextGame").classList.add("shown");
-    },1200);
+        setTimeout(()=>{
+            document.getElementById("puzzleSection").classList.add("hidden");
+            document.getElementById("nextGame").classList.remove("hidden");
+            document.getElementById("nextGame").classList.add("shown"); // tandai selesai
+        },1200);
+    }
 }
 
 let questions=[
