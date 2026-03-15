@@ -1317,6 +1317,9 @@ showQuestion()
 
 function confetti(){
 
+if(confettiRunning) return
+confettiRunning = true
+
 function update(){
 
 ctx.clearRect(0,0,canvas.width,canvas.height)
@@ -1332,7 +1335,7 @@ ctx.fillRect(0,0,p.size,p.size)
 ctx.restore()
 
 p.y += p.speed
-p.x += Math.sin(p.y * p.swing)
+p.x += Math.sin(p.y * 0.02)
 
 if(p.y > canvas.height){
 p.y = -10
