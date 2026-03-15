@@ -911,27 +911,26 @@ function startMic(){
 
 navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
 
-let ctx=new AudioContext()
+let AudioContextClass = window.AudioContext || window.webkitAudioContext
+let ctx = new AudioContextClass()
 
-let mic=ctx.createMediaStreamSource(stream)
+let mic = ctx.createMediaStreamSource(stream)
 
-let analyser=ctx.createAnalyser()
+let analyser = ctx.createAnalyser()
 analyser.fftSize = 512
 
 mic.connect(analyser)
 
-let data=new Uint8Array(analyser.frequencyBinCount)
+let data = new Uint8Array(analyser.frequencyBinCount)
 
 function detect(){
 
 analyser.getByteFrequencyData(data)
 
-let volume=data.reduce((a,b)=>a+b)/data.length
+let volume = data.reduce((a,b)=>a+b)/data.length
 
-if(volume>35){
-
+if(volume > 35){
 blow()
-
 }
 
 requestAnimationFrame(detect)
@@ -940,8 +939,9 @@ requestAnimationFrame(detect)
 
 detect()
 
+}).catch(err=>{
+console.log("mic error",err)
 })
-
 }
 
 function blow(){
@@ -1314,8 +1314,6 @@ document.getElementById("quizSection").classList.remove("hidden")
 showQuestion()
 
 }
-
-let confettiRunning = false
 
 function confetti(){
 
