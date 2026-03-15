@@ -896,16 +896,17 @@ document.getElementById("hacker").style.display="none"
 document.body.style.background="linear-gradient(135deg,#ff6ec7,#6ecbff,#8affc1)"
 
 document.getElementById("cakeSection").classList.remove("hidden")
-
-confetti()
-
-},800)
-
-}
+setTimeout(() => {
+    confetti()
+}, 100)  // delay 100ms biar browser render section dulu
 
 }
 
-hacker()
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+    hacker();
+});
 
 function startMic(){
 
@@ -1226,9 +1227,10 @@ bg.classList.add("show")
 setTimeout(()=>{
 
 paper.classList.add("show")
-confetti()
-createLove()
-
+setTimeout(() => {
+    confetti()
+    createLove()
+}, 50)  // delay kecil 50ms
 },600)
 
 }
@@ -1351,9 +1353,16 @@ requestAnimationFrame(update)
 update()
 
 }
-window.addEventListener("resize",()=>{
-canvas.width=window.innerWidth
-canvas.height=window.innerHeight
+
+window.addEventListener("resize", ()=>{
+    canvas.width = window.innerWidth
+    canvas.height = window.innerHeight
+
+    // reset posisi confetti
+    pieces.forEach(p => {
+        p.x = Math.random() * canvas.width
+        p.y = Math.random() * canvas.height
+    })
 })
 
 </script>
