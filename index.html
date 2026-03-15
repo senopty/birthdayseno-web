@@ -184,11 +184,12 @@ max-width:90vw;
 }
 
 .piece{
-width:100%;
-aspect-ratio:1;
-background-image:url("foto1.jpg");
-background-size:270px 270px;
-border:2px solid white;
+    width:100%;
+    aspect-ratio:1;
+    background-image:url("foto1.jpg");
+    background-size: cover; 
+    background-position: center; 
+    border:2px solid white;
 }
 
 .piece{
@@ -908,43 +909,33 @@ window.addEventListener("DOMContentLoaded", () => {
     hacker();
 });
 
-function startMic(){
+function startMic() {
+    navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
+        let AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        let ctx = new AudioContextClass();
+        let mic = ctx.createMediaStreamSource(stream);
+        let analyser = ctx.createAnalyser();
+        analyser.fftSize = 512;
+        mic.connect(analyser);
+        let data = new Uint8Array(analyser.frequencyBinCount);
 
-navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
+        // langsung play musik di awal user klik
+        let music = document.getElementById("music");
+        music.play().catch(e => console.log("audio still blocked", e));
 
-let AudioContextClass = window.AudioContext || window.webkitAudioContext
-let ctx = new AudioContextClass()
-
-let mic = ctx.createMediaStreamSource(stream)
-
-let analyser = ctx.createAnalyser()
-analyser.fftSize = 512
-
-mic.connect(analyser)
-
-let data = new Uint8Array(analyser.frequencyBinCount)
-
-function detect(){
-
-analyser.getByteFrequencyData(data)
-
-let volume = data.reduce((a,b)=>a+b)/data.length
-
-if(volume > 35){
-blow()
+        function detect(){
+            analyser.getByteFrequencyData(data);
+            let volume = data.reduce((a,b)=>a+b)/data.length;
+            if(volume > 35){
+                blow();
+            }
+            requestAnimationFrame(detect);
+        }
+        detect();
+    }).catch(err=>{
+        console.log("mic error",err)
+    });
 }
-
-requestAnimationFrame(detect)
-
-}
-
-detect()
-
-}).catch(err=>{
-console.log("mic error",err)
-})
-}
-
 function blow(){
 
 document.getElementById("flame").style.display = "none";
