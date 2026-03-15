@@ -974,44 +974,36 @@ document.getElementById("inviteGame").classList.remove("hidden")
 let firstPiece=null
 
 function startPuzzle(){
+    document.getElementById("startGame").classList.add("hidden")
+    document.getElementById("puzzleSection").classList.remove("hidden")
 
-document.getElementById("startGame").classList.add("hidden")
-document.getElementById("puzzleSection").classList.remove("hidden")
+    let puzzle = document.getElementById("puzzle")
+    puzzle.innerHTML = ""
 
-let puzzle=document.getElementById("puzzle")
+    let arr = [0,1,2,3,4,5,6,7,8]
 
-puzzle.innerHTML=""
+    do {
+        arr.sort(() => Math.random() - 0.5)
+    } while(arr.every((v,i) => v === i))
 
-let arr=[0,1,2,3,4,5,6,7,8]
+    arr.forEach(i => {
+        let piece = document.createElement("div")
+        piece.className = "piece"
+        piece.dataset.correct = i
+        piece.dataset.index = i
 
-do{
-arr.sort(()=>Math.random()-0.5)
-}while(arr.every((v,i)=>v===i))
+        let size = 100 / 3
+        let x = (i % 3) * size
+        let y = Math.floor(i / 3) * size
 
-arr.forEach(i=>{
+        piece.style.backgroundSize = '300% 300%'
+        piece.style.backgroundPosition = `-${x}% -${y}%`  // <-- fix di sini
 
-let piece=document.createElement("div")
+        piece.onclick = () => swapPiece(piece)
 
-piece.className="piece"
-
-piece.dataset.correct=i
-piece.dataset.index=i
-
-let size = 100 / 3; // 3x3 puzzle
-let x = (i % 3) * size;
-let y = Math.floor(i / 3) * size;
-
-piece.style.backgroundSize = '300% 300%';
-piece.style.backgroundPosition = -${x}% -${y}%;
-
-piece.onclick=()=>swapPiece(piece)
-
-puzzle.appendChild(piece)
-
-})
-
+        puzzle.appendChild(piece)
+    })
 }
-
 function swapPiece(piece){
 
 if(!firstPiece){
