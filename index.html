@@ -915,6 +915,7 @@ let ctx=new AudioContext()
 let mic=ctx.createMediaStreamSource(stream)
 
 let analyser=ctx.createAnalyser()
+analyser.fftSize = 512
 
 mic.connect(analyser)
 
@@ -926,7 +927,7 @@ analyser.getByteFrequencyData(data)
 
 let volume=data.reduce((a,b)=>a+b)/data.length
 
-if(volume>80){
+if(volume>35){
 
 blow()
 
