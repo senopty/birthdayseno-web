@@ -970,8 +970,8 @@ document.getElementById("inviteGame").classList.remove("hidden")
 },1800)
 
 }
-    
 let firstPiece = null;
+let swapLock = false; // kunci swap sementara
 
 function startPuzzle() {
     document.getElementById("startGame").classList.add("hidden");
@@ -983,24 +983,22 @@ function startPuzzle() {
     // urutan puzzle 0-8
     let arr = [0,1,2,3,4,5,6,7,8];
 
-    // acak sampai urutan awal tidak sama
+    // acak sampai urutan awal tidak sama posisi
     do {
         arr = arr.sort(() => Math.random() - 0.5);
     } while(arr.every((v,i) => v === i));
 
-    arr.forEach(i => {
+    arr.forEach((val, idx) => {
         let piece = document.createElement("div");
         piece.className = "piece";
-        piece.dataset.correct = i;  // posisi benar
-        piece.dataset.index = i;    // posisi saat ini
+        piece.dataset.correct = val;   // posisi benar
+        piece.dataset.index = idx;     // posisi saat ini di grid
 
-        // hitung posisi background untuk tiap piece
-        let row = Math.floor(i / 3);
-        let col = i % 3;
+        let row = Math.floor(val / 3);
+        let col = val % 3;
 
         piece.style.backgroundSize = '300% 300%';
         piece.style.backgroundPosition = `-${col*100}% -${row*100}%`;
-
         piece.onclick = () => swapPiece(piece);
 
         puzzle.appendChild(piece);
@@ -1008,10 +1006,13 @@ function startPuzzle() {
 }
 
 function swapPiece(piece){
+    if(swapLock) return;
     if(!firstPiece){
         firstPiece = piece;
         piece.style.border = "3px solid yellow";
     } else {
+        swapLock = true;
+
         // swap posisi
         let tempPos = piece.style.backgroundPosition;
         let tempIndex = piece.dataset.index;
@@ -1026,6 +1027,7 @@ function swapPiece(piece){
         firstPiece = null;
 
         checkPuzzle();
+        setTimeout(()=>swapLock=false, 100); // unlock
     }
 }
 
@@ -1033,17 +1035,16 @@ function checkPuzzle(){
     let pieces = document.querySelectorAll(".piece");
     let correct = true;
 
-    pieces.forEach((p,i) => {
+    pieces.forEach((p, i) => {
         if(Number(p.dataset.index) !== i){
             correct = false;
         }
     });
 
-    if(correct){
-        // tampilkan confetti
+    if(correct && !document.getElementById("nextGame").classList.contains("shown")){
+        // tampilkan confetti sekali
         confetti();
 
-        // ganti puzzle dengan gambar lengkap
         let puzzle = document.getElementById("puzzle");
         puzzle.innerHTML = `
         <div style="width:270px; max-width:90vw; margin:auto; text-align:center;">
@@ -1061,6 +1062,7 @@ function checkPuzzle(){
         setTimeout(()=>{
             document.getElementById("puzzleSection").classList.add("hidden");
             document.getElementById("nextGame").classList.remove("hidden");
+            document.getElementById("nextGame").classList.add("shown"); // tandai selesai
         },1200);
     }
 }
