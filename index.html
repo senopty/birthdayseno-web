@@ -1316,9 +1316,6 @@ showQuestion()
 
 function confetti(){
 
-if(confettiRunning) return
-confettiRunning = true
-
 function update(){
 
 ctx.clearRect(0,0,canvas.width,canvas.height)
@@ -1326,11 +1323,16 @@ ctx.clearRect(0,0,canvas.width,canvas.height)
 pieces.forEach(p=>{
 
 ctx.fillStyle = p.color
-ctx.fillRect(p.x,p.y,p.size,p.size)
+
+ctx.save()
+ctx.translate(p.x,p.y)
+ctx.rotate(p.y * 0.02)
+ctx.fillRect(0,0,p.size,p.size)
+ctx.restore()
 
 p.y += p.speed
+p.x += Math.sin(p.y * p.swing)
 
-// kalau keluar layar, muncul lagi dari atas random
 if(p.y > canvas.height){
 p.y = -10
 p.x = Math.random() * canvas.width
@@ -1343,6 +1345,8 @@ requestAnimationFrame(update)
 }
 
 update()
+
+}
 
 }
 window.addEventListener("resize",()=>{
