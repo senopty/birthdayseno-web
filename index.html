@@ -1017,14 +1017,15 @@ function swapPiece(piece){
 }
 
 function checkPuzzle(){
-    let pieces = document.querySelectorAll(".piece");
-    let correct = true;
 
-    pieces.forEach((p, i) => {
-        if(Number(p.dataset.index) !== i){
-            correct = false;
-        }
-    });
+let puzzlePieces = document.querySelectorAll(".piece");
+let correct = true;
+
+puzzlePieces.forEach((p, i) => {
+    if(Number(p.dataset.index) !== i){
+        correct = false;
+    }
+});
 
     if(correct && !document.getElementById("nextGame").classList.contains("shown")){
         // tampilkan confetti sekali
