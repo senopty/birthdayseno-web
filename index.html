@@ -879,36 +879,21 @@ loading birthday surprise...`
 let i=0
 
 function hacker(){
-
-if(i<hackText.length){
-
-document.getElementById("hack").innerHTML+=hackText[i]
-
-i++
-
-setTimeout(hacker,30)
-
-}else{
-
-setTimeout(()=>{
-
-document.getElementById("hacker").style.display="none"
-
-document.body.style.background="linear-gradient(135deg,#ff6ec7,#6ecbff,#8affc1)"
-
-document.getElementById("cakeSection").classList.remove("hidden")
-setTimeout(() => {
-    confetti()
-}, 100)  // delay 100ms biar browser render section dulu
-
+  if(i < hackText.length){
+    document.getElementById("hack").innerHTML += hackText[i]
+    i++
+    setTimeout(hacker, 30)
+  } else {
+    setTimeout(() => {
+      document.getElementById("hacker").style.display = "none"
+      document.body.style.background = "linear-gradient(135deg,#ff6ec7,#6ecbff,#8affc1)"
+      document.getElementById("cakeSection").classList.remove("hidden")
+      setTimeout(() => {
+          confetti()
+      }, 100)  // delay 100ms biar browser render section dulu
+    }, 500) // <--- tambahkan delay akhir ini
+  }
 }
-
-}
-
-window.addEventListener("DOMContentLoaded", () => {
-    hacker();
-});
-
 function startMic() {
     navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
         let AudioContextClass = window.AudioContext || window.webkitAudioContext;
