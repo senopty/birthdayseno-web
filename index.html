@@ -970,7 +970,7 @@ document.getElementById("inviteGame").classList.remove("hidden")
 },1800)
 
 }
-
+    
 let firstPiece = null;
 
 function startPuzzle() {
@@ -980,111 +980,89 @@ function startPuzzle() {
     let puzzle = document.getElementById("puzzle");
     puzzle.innerHTML = "";
 
+    // urutan puzzle 0-8
     let arr = [0,1,2,3,4,5,6,7,8];
 
-    // acak puzzle sampai tidak sama urutan
+    // acak sampai urutan awal tidak sama
     do {
-        arr.sort(() => Math.random() - 0.5);
+        arr = arr.sort(() => Math.random() - 0.5);
     } while(arr.every((v,i) => v === i));
 
     arr.forEach(i => {
         let piece = document.createElement("div");
         piece.className = "piece";
-        piece.dataset.correct = i;
-        piece.dataset.index = i;
+        piece.dataset.correct = i;  // posisi benar
+        piece.dataset.index = i;    // posisi saat ini
 
-        let size = 100 / 3;
-        let x = (i % 3) * size;
-        let y = Math.floor(i / 3) * size;
+        // hitung posisi background untuk tiap piece
+        let row = Math.floor(i / 3);
+        let col = i % 3;
 
         piece.style.backgroundSize = '300% 300%';
-        piece.style.backgroundPosition = `-${x}% -${y}%`;  // <-- wajib pakai backtick
+        piece.style.backgroundPosition = `-${col*100}% -${row*100}%`;
 
         piece.onclick = () => swapPiece(piece);
 
         puzzle.appendChild(piece);
     });
 }
-    
+
 function swapPiece(piece){
+    if(!firstPiece){
+        firstPiece = piece;
+        piece.style.border = "3px solid yellow";
+    } else {
+        // swap posisi
+        let tempPos = piece.style.backgroundPosition;
+        let tempIndex = piece.dataset.index;
 
-if(!firstPiece){
+        piece.style.backgroundPosition = firstPiece.style.backgroundPosition;
+        piece.dataset.index = firstPiece.dataset.index;
 
-firstPiece=piece
-piece.style.border="3px solid yellow"
+        firstPiece.style.backgroundPosition = tempPos;
+        firstPiece.dataset.index = tempIndex;
 
-}else{
+        firstPiece.style.border = "2px solid white";
+        firstPiece = null;
 
-let tempPos=piece.style.backgroundPosition
-let tempIndex=piece.dataset.index
-
-piece.style.backgroundPosition=firstPiece.style.backgroundPosition
-piece.dataset.index=firstPiece.dataset.index
-
-firstPiece.style.backgroundPosition=tempPos
-firstPiece.dataset.index=tempIndex
-
-firstPiece.style.border="2px solid white"
-firstPiece=null
-
-checkPuzzle()
-
-}
-
+        checkPuzzle();
+    }
 }
 
 function checkPuzzle(){
+    let pieces = document.querySelectorAll(".piece");
+    let correct = true;
 
-let pieces=document.querySelectorAll(".piece")
+    pieces.forEach((p,i) => {
+        if(Number(p.dataset.index) !== i){
+            correct = false;
+        }
+    });
 
-let correct=true
+    if(correct){
+        // tampilkan confetti
+        confetti();
 
-pieces.forEach((p,i)=>{
+        // ganti puzzle dengan gambar lengkap
+        let puzzle = document.getElementById("puzzle");
+        puzzle.innerHTML = `
+        <div style="width:270px; max-width:90vw; margin:auto; text-align:center;">
+            <img src="foto1.jpg" style="
+                width:100%;
+                border-radius:12px;
+                box-shadow:0 10px 25px rgba(0,0,0,0.6);
+                object-fit:cover;
+                aspect-ratio:1/1;
+            ">
+            <h2 style="color:#00ffb7; margin-top:10px;">Puzzle Complete! 🎉</h2>
+        </div>
+        `;
 
-if(Number(p.dataset.index)!==i){
-correct=false
-}
-
-})
-
-if(correct){
-
-confetti()
-
-let puzzle=document.getElementById("puzzle")
-
-puzzle.innerHTML=`
-<div style="
-width:270px;
-max-width:90vw;
-margin:auto;
-text-align:center;
-">
-<img src="foto1.jpg" style="
-width:100%;
-border-radius:12px;
-box-shadow:0 10px 25px rgba(0,0,0,0.6);
-object-fit:cover;
-aspect-ratio:1/1;
-">
-<h2 style="
-color:#00ffb7;
-margin-top:10px;
-">Puzzle Complete! 🎉</h2>
-</div>
-`
-
-setTimeout(()=>{
-
-document.getElementById("puzzleSection").classList.add("hidden")
-document.getElementById("nextGame").classList.remove("hidden")
-
-showQuestion()
-
-},1200)
-
-}
-
+        setTimeout(()=>{
+            document.getElementById("puzzleSection").classList.add("hidden");
+            document.getElementById("nextGame").classList.remove("hidden");
+        },1200);
+    }
 }
 
 let questions=[
