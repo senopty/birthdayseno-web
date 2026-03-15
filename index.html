@@ -1315,7 +1315,9 @@ ctx.fillRect(p.x,p.y,p.size,p.size)
 
 p.y+=p.speed
 
-if(p.y>canvas.height)p.y=0
+if(p.y>canvas.height){
+p.y=0
+}
 
 })
 
@@ -1328,14 +1330,9 @@ confettiRunning=false
 
 }
 
-requestAnimationFrame(update)
-
-}
-
 update()
 
 }
-
 window.addEventListener("resize",()=>{
 canvas.width=window.innerWidth
 canvas.height=window.innerHeight
