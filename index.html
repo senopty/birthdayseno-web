@@ -685,7 +685,7 @@ box-shadow:0 5px 15px rgba(0,0,0,0.2);
 <div class="balloon" style="left:60%;background:#ff8fab;animation-delay:1s"></div>
 <div class="balloon" style="left:80%;background:#9bff6b;animation-delay:3s"></div>
 
-<audio id="music" controls loop>
+<audio id="music" loop preload>
 <source src="music.mp3" type="audio/mpeg">
 </audio>
 
@@ -945,16 +945,28 @@ detect()
 
 function blow(){
 
-document.getElementById("flame").style.display="none"
-document.getElementById("music").play()
+document.getElementById("flame").style.display = "none";
 
-let candle=document.querySelector(".candle")
+let music = document.getElementById("music");
+
+music.currentTime = 0;
+
+music.play().catch(function(e){
+console.log("audio blocked");
+});
+
+let candle = document.querySelector(".candle");
 
 for(let i=0;i<6;i++){
-let smoke=document.createElement("div")
-smoke.className="smoke"
-smoke.style.left=(Math.random()*10-5)+"px"
-candle.appendChild(smoke)
+
+let smoke = document.createElement("div");
+
+smoke.className = "smoke";
+
+smoke.style.left = (Math.random()*10-5)+"px";
+
+candle.appendChild(smoke);
+
 }
 
 setTimeout(()=>{
